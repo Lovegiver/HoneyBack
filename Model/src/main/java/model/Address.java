@@ -1,16 +1,18 @@
 package model;
 
-import lombok.Getter;
-import lombok.Setter;
-import lombok.ToString;
+import enums.AddressType;
+import lombok.*;
 
 import java.util.Objects;
 
 @ToString(onlyExplicitlyIncluded = true)
+@Builder
 public class Address {
 
     @Getter @Setter @ToString.Include
     private long id;
+    @Getter @Setter @ToString.Include
+    private AddressType addressType;
     @Getter @Setter @ToString.Include
     private User userId;
     @Getter @Setter @ToString.Include
@@ -25,6 +27,18 @@ public class Address {
     private String country;
     @Getter @Setter @ToString.Include
     private String state;
+
+    public Address(@NonNull AddressType type, @NonNull User user, @NonNull String street1, @NonNull String street2,
+                   @NonNull String zipcode, @NonNull String city, @NonNull String country, String state) {
+        this.addressType = type;
+        this.userId = user;
+        this.street1 = street1;
+        this.street2 = street2;
+        this.zipcode = zipcode;
+        this.city = city;
+        this.country = country;
+        this.state = state;
+    }
 
     @Override
     public boolean equals(Object o) {

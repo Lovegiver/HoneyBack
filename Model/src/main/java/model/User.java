@@ -1,5 +1,6 @@
 package model;
 
+import enums.UserType;
 import lombok.*;
 
 import java.util.LinkedHashSet;
@@ -7,10 +8,12 @@ import java.util.Objects;
 import java.util.Set;
 
 @ToString(onlyExplicitlyIncluded = true)
-public class User {
+class User {
 
     @Getter @Setter @ToString.Include
     private long id;
+    @Getter @Setter @ToString.Include
+    private UserType userType;
     @Getter @Setter @ToString.Include
     private String email;
     @Getter @Setter @ToString.Include
@@ -22,7 +25,21 @@ public class User {
     @Getter @Setter @ToString.Include
     private String lastname;
     @Getter @Setter
+    private String description;
+    @Getter @Setter
     private Set<Address> addresses = new LinkedHashSet<>();
+
+    protected User() {}
+
+    protected User(@NonNull UserType type, @NonNull String email, @NonNull String password, @NonNull String pseudo,
+                   @NonNull String firstname, @NonNull String lastname) {
+        this.userType = type;
+        this.email = email;
+        this.password = password;
+        this.pseudo = pseudo;
+        this.firstname = firstname;
+        this.lastname = lastname;
+    }
 
     /** Adds an {@link Address} to the {@link User}'s collection */
     public void addAddress(@NonNull Address address) { this.addresses.add(address); }
