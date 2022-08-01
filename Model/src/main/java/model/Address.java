@@ -6,6 +6,8 @@ import lombok.*;
 import java.util.Objects;
 
 @ToString(onlyExplicitlyIncluded = true)
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
+@AllArgsConstructor
 @Builder
 public class Address {
 

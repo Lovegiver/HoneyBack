@@ -8,7 +8,8 @@ import java.util.Objects;
 import java.util.Set;
 
 @ToString(onlyExplicitlyIncluded = true)
-class User {
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
+class User implements PictureHolder {
 
     @Getter @Setter @ToString.Include
     private long id;
@@ -28,8 +29,8 @@ class User {
     private String description;
     @Getter @Setter
     private Set<Address> addresses = new LinkedHashSet<>();
-
-    protected User() {}
+    @Getter @Setter
+    private Picture associatedPicture;
 
     protected User(@NonNull UserType type, @NonNull String email, @NonNull String password, @NonNull String pseudo,
                    @NonNull String firstname, @NonNull String lastname) {
@@ -61,4 +62,15 @@ class User {
         return Objects.hash(id, email, password, pseudo, firstname, lastname);
     }
 
+    @Override
+    public void associatePicture(Picture picture) {
+        this.associatedPicture = picture;
+        // TODO : implement the other side of the relationship
+    }
+
+    @Override
+    public void dissociatePicture(Picture picture) {
+        this.associatedPicture = null;
+        // TODO : implement the other side of the relationship
+    }
 }
