@@ -1,2 +1,3 @@
 # HoneyBack
-Backend part for a web site 
+The Model module contains domain's objects.
+

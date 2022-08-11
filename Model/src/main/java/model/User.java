@@ -1,5 +1,6 @@
 package model;
 
+import DTO.UserDataDTO;
 import enums.UserType;
 import lombok.*;
 

@@ -7,9 +7,6 @@
     <groupId>com.citizenweb.tooling.honeyback</groupId>
     <artifactId>HoneyBack</artifactId>
     <version>1.0-SNAPSHOT</version>
-    <modules>
-        <module>Model</module>
-    </modules>
     <name>Global project</name>
     <packaging>pom</packaging>
 
@@ -25,6 +22,10 @@
         <maven.compiler.source>11</maven.compiler.source>
         <maven.compiler.target>11</maven.compiler.target>
     </properties>
+
+    <modules>
+        <module>Model</module>
+    </modules>
 
 <!--    <modules>-->
 <!--        <module>Integrator</module>-->

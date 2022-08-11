@@ -20,7 +20,7 @@ public class Picture {
     @Getter @Setter
     private Set<PictureHolder> pictureHolders = new LinkedHashSet<>();
 
-    protected Picture(@NonNull Blob picture, @NonNull User user) {
+    public Picture(@NonNull Blob picture, @NonNull User user) {
         this.picture = picture;
         this.owner = user;
     }

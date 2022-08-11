@@ -3,6 +3,7 @@ package enums;
 import model.Unit;
 
 public enum WeightUnitType implements Unit {
+
     KG ("Kilogram(s)"),
     GR ("Grams"),
     MG ("Milligrams")
