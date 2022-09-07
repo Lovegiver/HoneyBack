@@ -2,37 +2,35 @@ package model;
 
 import lombok.*;
 
-import java.sql.Blob;
-import java.util.LinkedHashSet;
+import javax.persistence.*;
+import java.sql.Clob;
 import java.util.Objects;
-import java.util.Set;
 
+@Entity
+@Inheritance(strategy = InheritanceType.SINGLE_TABLE)
+@Table(name = "PICTURE")
+@DiscriminatorColumn(name = "pic_type")
 @ToString(onlyExplicitlyIncluded = true)
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Picture {
 
+    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "pic_id")
     @Getter @Setter @ToString.Include
     private long id;
+    @Lob
+    @Column(name = "pic_picture")
     @Getter @Setter
-    private Blob picture;
+    private Clob picture;
+    /* RELATIONSHIP */
+    @OneToOne @JoinColumn(name = "pic_usr_id_owner")
     @Getter @Setter @ToString.Include
     private User owner;
-    @Getter @Setter
-    private Set<PictureHolder> pictureHolders = new LinkedHashSet<>();
 
-    public Picture(@NonNull Blob picture, @NonNull User user) {
+
+    public Picture(@NonNull Clob picture, @NonNull User user) {
         this.picture = picture;
         this.owner = user;
-    }
-
-    public void associatePictureHolder(@NonNull PictureHolder holder) {
-        this.pictureHolders.add(holder);
-        holder.associatePicture(this);
-    }
-
-    public void removeAssociatedPictureHolder(@NonNull PictureHolder holder) {
-        this.pictureHolders.remove(holder);
-        holder.dissociatePicture(this);
     }
 
     @Override

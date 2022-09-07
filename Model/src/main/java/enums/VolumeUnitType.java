@@ -10,6 +10,7 @@ public enum VolumeUnitType implements Unit {
     ;
 
     private final String unit;
+
     VolumeUnitType(String unit) {
         this.unit = unit;
     }
@@ -18,4 +19,5 @@ public enum VolumeUnitType implements Unit {
     public String getUnit() {
         return this.unit;
     }
+
 }

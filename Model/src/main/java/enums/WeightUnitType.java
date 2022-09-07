@@ -19,4 +19,5 @@ public enum WeightUnitType implements Unit {
     public String getUnit() {
         return this.unit;
     }
+
 }
