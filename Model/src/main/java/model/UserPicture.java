@@ -3,6 +3,7 @@ package model;
 import lombok.*;
 
 import javax.persistence.*;
+import java.sql.Clob;
 import java.util.Objects;
 
 @Entity
@@ -15,6 +16,10 @@ public class UserPicture extends Picture {
     @OneToOne @JoinColumn(name = "pic_usr_id")
     @Getter @Setter @ToString.Include
     private User user;
+
+    public UserPicture(@NonNull Clob picture, @NonNull User user) {
+        super(picture, user);
+    }
 
     /**
      * Associates a User to this Picture

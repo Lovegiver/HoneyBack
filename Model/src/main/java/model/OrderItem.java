@@ -20,10 +20,10 @@ public class OrderItem implements Orderable {
     @Column(name = "lin_id")
     @Getter @Setter @ToString.Include
     private long id;
-    @Column(name = "lin_status")
+    @Column(name = "lin_status") @Enumerated(EnumType.STRING)
     @Getter @Setter @ToString.Include
     private OrderlineStatus status;
-    @Column(name = "lin_create_date")
+    @Column(name = "lin_create_date") @Temporal(TemporalType.TIMESTAMP)
     @Getter @Setter @ToString.Include
     private LocalDateTime creationDate;
     @Column(name = "lin_qty")

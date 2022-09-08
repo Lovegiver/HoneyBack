@@ -3,28 +3,45 @@ package model;
 import enums.GenderType;
 import enums.UserType;
 import lombok.*;
+import lombok.experimental.SuperBuilder;
 
-import javax.persistence.*;
+import javax.persistence.Entity;
+import javax.persistence.ManyToMany;
+import javax.persistence.Table;
+import java.time.LocalDateTime;
 import java.util.LinkedHashSet;
 import java.util.Objects;
 import java.util.Set;
 
 @Entity
 @Table(name = "BUYER")
+@ToString(onlyExplicitlyIncluded = true)
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
+@SuperBuilder
 public class Buyer extends User {
 
     /* RELATIONSHIP */
-    @OneToOne(mappedBy = "buyer")
-    private Cart cart;
+    @ManyToMany(mappedBy = "buyers")
+    @Getter @Setter
+    private Set<Cart> carts = new LinkedHashSet<>();
     /** User's orders : sent orders for Buyers or received ones for Sellers */
     @ManyToMany(mappedBy = "buyers")
-    private final Set<Order> orders = new LinkedHashSet<>();
+    @Getter @Setter
+    private Set<Order> orders = new LinkedHashSet<>();
 
-    @Builder
     public Buyer(@NonNull String email, @NonNull String password, @NonNull String pseudo,
-                 @NonNull String firstname, @NonNull String lastname, @NonNull GenderType genderType) {
-        super(UserType.BUYER, email, password, pseudo, firstname, lastname, genderType);
+                 @NonNull String firstname, @NonNull String lastname, @NonNull GenderType genderType, LocalDateTime lastConnected) {
+        super(UserType.BUYER, email, password, pseudo, firstname, lastname, genderType, lastConnected);
+    }
+
+    public void addOrder(Order order) {
+        this.orders.add(order);
+        order.addBuyer(this);
+    }
+
+    public void removeOrder(Order order) {
+        this.orders.remove(order);
+        order.removeBuyer(this);
     }
 
     @Override
@@ -33,11 +50,11 @@ public class Buyer extends User {
         if (!(o instanceof Buyer)) return false;
         if (!super.equals(o)) return false;
         Buyer buyer = (Buyer) o;
-        return cart.equals(buyer.cart) && orders.equals(buyer.orders);
+        return carts.equals(buyer.carts) && orders.equals(buyer.orders);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(super.hashCode(), cart, orders);
+        return Objects.hash(super.hashCode(), carts, orders);
     }
 }

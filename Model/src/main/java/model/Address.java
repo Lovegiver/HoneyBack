@@ -64,13 +64,13 @@ public class Address {
         if (this == o) return true;
         if (!(o instanceof Address)) return false;
         Address address = (Address) o;
-        return id == address.id && user.equals(address.user) && street1.equals(address.street1)
-                && Objects.equals(street2, address.street2) && zipcode.equals(address.zipcode)
-                && city.equals(address.city) && country.equals(address.country) && Objects.equals(state, address.state);
+        return id == address.id && isActive == address.isActive && addressType == address.addressType
+                && street1.equals(address.street1) && zipcode.equals(address.zipcode) && city.equals(address.city)
+                && country.equals(address.country) && user.equals(address.user);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, user, street1, street2, zipcode, city, country, state);
+        return Objects.hash(id, addressType, street1, zipcode, city, country, isActive, user);
     }
 }

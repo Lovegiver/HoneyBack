@@ -3,6 +3,7 @@ package model;
 import enums.GenderType;
 import enums.UserType;
 import lombok.*;
+import lombok.experimental.SuperBuilder;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
@@ -15,6 +16,9 @@ import java.util.Set;
 @Table(name = "USER")
 @ToString(onlyExplicitlyIncluded = true)
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
+@AllArgsConstructor
+@SuperBuilder
+public
 class User implements PictureHolder {
 
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -43,6 +47,7 @@ class User implements PictureHolder {
     @Getter @Setter @ToString.Include
     private String password;
     @Column(name = "usr_last_co") @Temporal(TemporalType.TIMESTAMP)
+    @Getter @Setter @ToString.Include
     private LocalDateTime lastConnection;
     @Column(name = "usr_gender") @Enumerated(EnumType.STRING)
     @Getter @Setter @ToString.Include
@@ -59,20 +64,22 @@ class User implements PictureHolder {
     private Picture associatedPicture;
 
     protected User(@NonNull UserType type, @NonNull String email, @NonNull String password, @NonNull String pseudo,
-                   @NonNull String firstname, @NonNull String lastname, @NonNull GenderType genderType) {
+                   @NonNull String firstname, @NonNull String lastname, @NonNull GenderType genderType, LocalDateTime lastConnected) {
         this.userType = type;
         this.email = email;
         this.password = password;
         this.pseudo = pseudo;
         this.firstname = firstname;
         this.lastname = lastname;
+        this.genderType = genderType;
+        this.lastConnection = lastConnected;
     }
 
     /** Adds an {@link Address} to the {@link User}'s collection */
-    public void addAddress(@NonNull Address address) { this.addresses.add(address); }
+    public void addAddress(@NonNull Address address) { this.addresses.add(address); address.setUser(this); }
 
     /** Removes an {@link Address} from the {@link User}'s collection */
-    public void removeAddress(@NonNull Address address) { this.addresses.remove(address); }
+    public void removeAddress(@NonNull Address address) { this.addresses.remove(address); address.setUser(null); }
 
     @Override
     public void associatePicture(Picture picture) {

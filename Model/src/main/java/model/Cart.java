@@ -10,6 +10,7 @@ import java.math.BigDecimal;
 import java.util.Collection;
 import java.util.List;
 import java.util.Objects;
+import java.util.Set;
 import java.util.concurrent.atomic.AtomicReference;
 
 @Entity
@@ -17,11 +18,17 @@ import java.util.concurrent.atomic.AtomicReference;
 @ToString(onlyExplicitlyIncluded = true)
 public class Cart extends OrderItemContainer {
 
+    @Column(name = "crt_is_shared")
+    @Getter @Setter @ToString.Include
+    private boolean isSharedCart;
     /* RELATIONSHIP */
     /** The Buyer, owner of this Cart */
-    @OneToOne @JoinColumn(name = "crt_usr_id_buyer")
-    @Getter @Setter @ToString.Include
-    private Buyer buyer;
+    @ManyToMany @JoinTable(name = "USER_CART",
+        joinColumns = { @JoinColumn(name = "crt_id") },
+            inverseJoinColumns = { @JoinColumn(name = "usr_id") }
+    )
+    @Getter @Setter
+    private Set<Buyer> buyers;
     /** The OrderItems contained in this Cart */
     @OneToMany(mappedBy = "cart")
     @Getter @Setter
@@ -61,11 +68,11 @@ public class Cart extends OrderItemContainer {
         if (this == o) return true;
         if (!(o instanceof Cart)) return false;
         Cart cart = (Cart) o;
-        return buyer.equals(cart.buyer) && orderItems.equals(cart.orderItems);
+        return buyers.equals(cart.buyers) && orderItems.equals(cart.orderItems);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(buyer, orderItems);
+        return Objects.hash(buyers, orderItems);
     }
 }

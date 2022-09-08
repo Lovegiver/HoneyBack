@@ -45,7 +45,7 @@ public class Product implements PictureHolder {
     private Picture associatedPicture;
     /** The order lines where this product may be found */
     @OneToMany(mappedBy = "product")
-    @Getter @Setter
+    @Getter @Setter @ToString.Include
     private List<OrderItem> orderItems;
 
     public Product(@NonNull String name, @NonNull String reference, String description, @NonNull Unit unit,

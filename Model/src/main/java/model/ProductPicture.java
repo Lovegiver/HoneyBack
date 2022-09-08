@@ -1,14 +1,12 @@
 package model;
 
-import lombok.AccessLevel;
-import lombok.NoArgsConstructor;
-import lombok.NonNull;
-import lombok.ToString;
+import lombok.*;
 
 import javax.persistence.DiscriminatorValue;
 import javax.persistence.Entity;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
+import java.sql.Clob;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -22,7 +20,12 @@ public class ProductPicture extends Picture {
 
     /* RELATIONSHIP */
     @OneToMany(mappedBy = "associatedPicture")
+    @Getter @Setter @ToString.Include
     private List<Product> products = new ArrayList<>();
+
+    public ProductPicture(@NonNull Clob picture, @NonNull User user) {
+        super(picture, user);
+    }
 
     /**
      * Associates a Product to this Picture

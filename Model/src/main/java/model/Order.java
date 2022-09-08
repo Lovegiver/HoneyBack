@@ -25,8 +25,8 @@ public class Order extends OrderItemContainer {
         joinColumns = { @JoinColumn(name = "ord_id") },
             inverseJoinColumns = { @JoinColumn(name = "usr_id") }
     )
-    @Getter @Setter @ToString.Include
-    private Set<User> buyers = new LinkedHashSet<>();
+    @Getter @Setter
+    private Set<Buyer> buyers = new LinkedHashSet<>();
     /** The Seller for the Products in this Order */
     @ManyToOne @JoinColumn(name = "ord_usr_id_seller")
     @Getter @Setter
@@ -34,6 +34,14 @@ public class Order extends OrderItemContainer {
 
     @Builder
     public Order() {}
+
+    public void addBuyer(Buyer buyer) {
+        this.buyers.add(buyer);
+    }
+
+    public void removeBuyer(Buyer buyer) {
+        this.buyers.remove(buyer);
+    }
 
     /**
      * @return an amount
