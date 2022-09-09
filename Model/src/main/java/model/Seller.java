@@ -10,6 +10,7 @@ import javax.persistence.Entity;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import java.time.LocalDateTime;
+import java.util.LinkedHashSet;
 import java.util.Objects;
 import java.util.Set;
 
@@ -31,11 +32,11 @@ public class Seller extends User {
     private String siren;
     /* RELATIONSHIP */
     @OneToMany(mappedBy = "seller")
-    @Getter @Setter
-    private Set<Product> products;
+    @Getter @Setter @Builder.Default
+    private Set<Product> products = new LinkedHashSet<>();
     @OneToMany(mappedBy = "seller")
-    @Getter @Setter @ToString.Include
-    private Set<Order> orders;
+    @Getter @Setter  @Builder.Default
+    private Set<Order> orders = new LinkedHashSet<>();
 
     public Seller(@NonNull String email, @NonNull String password, @NonNull String pseudo,
                   @NonNull String firstname, @NonNull String lastname, @NonNull GenderType genderType,
@@ -56,18 +57,27 @@ public class Seller extends User {
         order.setSeller(null);
     }
 
+    public void addProduct(Product product) {
+        this.products.add(product);
+        product.setSeller(this);
+    }
+
+    public void removeProduct(Product product) {
+        this.products.remove(product);
+        product.setSeller(null);
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (!(o instanceof Seller)) return false;
         if (!super.equals(o)) return false;
         Seller seller = (Seller) o;
-        return companyName.equals(seller.companyName) && Objects.equals(rcs, seller.rcs) && Objects.equals(siren, seller.siren)
-                && products.equals(seller.products) && orders.equals(seller.orders);
+        return companyName.equals(seller.companyName) && Objects.equals(rcs, seller.rcs) && Objects.equals(siren, seller.siren);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(super.hashCode(), companyName, rcs, siren, products, orders);
+        return Objects.hash(super.hashCode(), companyName, rcs, siren);
     }
 }

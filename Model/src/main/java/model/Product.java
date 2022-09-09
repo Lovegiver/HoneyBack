@@ -45,7 +45,7 @@ public class Product implements PictureHolder {
     private Picture associatedPicture;
     /** The order lines where this product may be found */
     @OneToMany(mappedBy = "product")
-    @Getter @Setter @ToString.Include
+    @Getter @Setter
     private List<OrderItem> orderItems;
 
     public Product(@NonNull String name, @NonNull String reference, String description, @NonNull Unit unit,
@@ -73,11 +73,11 @@ public class Product implements PictureHolder {
         if (this == o) return true;
         if (!(o instanceof Product)) return false;
         Product product = (Product) o;
-        return id == product.id && quantity == product.quantity && name.equals(product.name) && reference.equals(product.reference) && unit.equals(product.unit) && seller.equals(product.seller);
+        return id == product.id && quantity == product.quantity && name.equals(product.name) && reference.equals(product.reference) && unit.equals(product.unit);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, name, reference, unit, quantity, seller);
+        return Objects.hash(id, name, reference, unit, quantity);
     }
 }

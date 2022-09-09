@@ -37,10 +37,22 @@ public class Order extends OrderItemContainer {
 
     public void addBuyer(Buyer buyer) {
         this.buyers.add(buyer);
+        buyer.addOrder(this);
     }
 
     public void removeBuyer(Buyer buyer) {
         this.buyers.remove(buyer);
+        buyer.removeOrder(this);
+    }
+
+    public void addOrderItem(OrderItem item) {
+        this.orderItems.add(item);
+        item.setOrder(this);
+    }
+
+    public void removeOrderItem(OrderItem item) {
+        this.orderItems.remove(item);
+        item.setOrder(null);
     }
 
     /**
@@ -65,7 +77,7 @@ public class Order extends OrderItemContainer {
         this.orderItems.forEach(line -> {
             amount.set(amount.get().add(line.getTotalAmountWithVAT()));
         });
-        this.totalAmountNoVAT = amount.get();
+        this.totalAmountWithVAT = amount.get();
         return amount.get();
     }
 

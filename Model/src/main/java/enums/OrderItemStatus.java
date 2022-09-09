@@ -1,6 +1,6 @@
 package enums;
 
-public enum OrderlineStatus {
+public enum OrderItemStatus {
     DRAFT,
     SHARED,
     ORDERED

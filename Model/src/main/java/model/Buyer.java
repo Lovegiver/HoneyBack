@@ -36,12 +36,18 @@ public class Buyer extends User {
 
     public void addOrder(Order order) {
         this.orders.add(order);
-        order.addBuyer(this);
     }
 
     public void removeOrder(Order order) {
         this.orders.remove(order);
-        order.removeBuyer(this);
+    }
+
+    public void addCart(Cart cart) {
+        this.carts.add(cart);
+    }
+
+    public void removeCart(Cart cart) {
+        this.carts.remove(cart);
     }
 
     @Override

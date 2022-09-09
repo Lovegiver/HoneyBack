@@ -1,6 +1,6 @@
 package model;
 
-import enums.OrderlineStatus;
+import enums.OrderItemStatus;
 import lombok.*;
 
 import javax.persistence.*;
@@ -22,7 +22,7 @@ public class OrderItem implements Orderable {
     private long id;
     @Column(name = "lin_status") @Enumerated(EnumType.STRING)
     @Getter @Setter @ToString.Include
-    private OrderlineStatus status;
+    private OrderItemStatus status;
     @Column(name = "lin_create_date") @Temporal(TemporalType.TIMESTAMP)
     @Getter @Setter @ToString.Include
     private LocalDateTime creationDate;

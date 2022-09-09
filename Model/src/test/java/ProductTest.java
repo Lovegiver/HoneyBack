@@ -8,8 +8,9 @@ import org.junit.jupiter.api.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
+import java.util.Optional;
+
+import static org.junit.jupiter.api.Assertions.*;
 
 public class ProductTest {
 
@@ -23,7 +24,7 @@ public class ProductTest {
         Unit unit = WeightUnitType.GR;
         Seller seller = (Seller) EntityBuilder.getUser(UserType.SELLER, sellerId);
         Product product = EntityBuilder.getProduct(unit, productId);
-        product.setSeller(seller);
+        seller.addProduct(product);
 
         assertNotNull(seller);
         assertEquals(EntityBuilder.company, seller.getCompanyName());
@@ -48,6 +49,14 @@ public class ProductTest {
         assertEquals(unit, product.getUnit());
         assertEquals(EntityBuilder.quantity, product.getQuantity());
         assertEquals(seller, product.getSeller());
+        assertEquals(1, seller.getProducts().size());
+        Optional<Product> optProduct = seller.getProducts().stream().findAny();
+        optProduct.ifPresent(value -> assertEquals(value, product));
+        if (seller.getProducts().contains(product)) {
+            LOG.debug("Contains !!");
+        } else {
+            LOG.debug("Does not contain !!");
+        }
 
         LOG.debug(product.toString());
 

@@ -46,8 +46,9 @@ public class Address {
     @Getter @Setter @ToString.Include
     private User user;
 
-    public Address(@NonNull AddressType type, @NonNull User user, @NonNull String street1, @NonNull String street2,
-                   @NonNull String zipcode, @NonNull String city, @NonNull String country, String state, @NonNull boolean isActive) {
+    public Address(@NonNull AddressType type, @NonNull User user, @NonNull String street1, String street2,
+                   @NonNull String zipcode, @NonNull String city, @NonNull String country, String state,
+                   @NonNull boolean isActive) {
         this.addressType = type;
         this.user = user;
         this.street1 = street1;
