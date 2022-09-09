@@ -40,6 +40,7 @@ public class ProductTest {
         assertEquals(EntityBuilder.password, seller.getPassword());
         assertEquals(GenderType.WOMAN, seller.getGenderType());
         assertEquals(EntityBuilder.lastConnected, seller.getLastConnection());
+        assertEquals(seller, product.getSeller());
 
         assertNotNull(product);
         assertEquals(productId, product.getId());
@@ -50,13 +51,14 @@ public class ProductTest {
         assertEquals(EntityBuilder.quantity, product.getQuantity());
         assertEquals(seller, product.getSeller());
         assertEquals(1, seller.getProducts().size());
-        Optional<Product> optProduct = seller.getProducts().stream().findAny();
-        optProduct.ifPresent(value -> assertEquals(value, product));
-        if (seller.getProducts().contains(product)) {
-            LOG.debug("Contains !!");
-        } else {
-            LOG.debug("Does not contain !!");
-        }
+        assertTrue(seller.getProducts().contains(product));
+        seller.getProducts().forEach(p -> {
+            assertEquals(product, p);
+        });
+
+        seller.removeProduct(product);
+        assertEquals(0, seller.getProducts().size());
+        assertNull(product.getSeller());
 
         LOG.debug(product.toString());
 
