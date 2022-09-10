@@ -56,7 +56,7 @@ class User implements PictureHolder {
     /* RELATIONSHIP */
     /** User's addresses */
     @OneToMany(mappedBy = "user")
-    @Getter @Setter
+    @Getter @Setter @Builder.Default
     private Set<Address> addresses = new LinkedHashSet<>();
     /** User's profile picture */
     @OneToOne(mappedBy = "user")
@@ -73,6 +73,7 @@ class User implements PictureHolder {
         this.lastname = lastname;
         this.genderType = genderType;
         this.lastConnection = lastConnected;
+        this.addresses = new LinkedHashSet<>();
     }
 
     /** Adds an {@link Address} to the {@link User}'s collection */
@@ -94,13 +95,13 @@ class User implements PictureHolder {
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
-        if (!(o instanceof User)) return false;
+        if (o == null || getClass() != o.getClass()) return false;
         User user = (User) o;
-        return Objects.equals(pseudo, user.pseudo) && firstname.equals(user.firstname) && lastname.equals(user.lastname) && email.equals(user.email);
+        return id == user.id && userType == user.userType && Objects.equals(pseudo, user.pseudo) && email.equals(user.email) && Objects.equals(lastConnection, user.lastConnection) && genderType == user.genderType;
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(pseudo, firstname, lastname, email);
+        return Objects.hash(id, userType, pseudo, email, lastConnection, genderType);
     }
 }

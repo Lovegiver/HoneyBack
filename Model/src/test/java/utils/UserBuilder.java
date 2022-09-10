@@ -1,11 +1,17 @@
+package utils;
+
 import enums.GenderType;
 import enums.UserType;
-import model.*;
+import lombok.NoArgsConstructor;
+import model.Buyer;
+import model.Seller;
+import model.User;
 
 import java.time.LocalDateTime;
 import java.time.Month;
 
-public class EntityBuilder {
+@NoArgsConstructor
+public class UserBuilder implements EntityBuilderService<User> {
 
     /* USER */
     public static String email = "user@honey.com";
@@ -21,19 +27,15 @@ public class EntityBuilder {
     public static LocalDateTime lastConnected = LocalDateTime.of(1971, Month.JULY.getValue(), 8, 14, 0);
     public static String userDescription = "Producteur de miel";
 
-    /* PRODUCT */
-    public static String name = "Miel de lavande";
-    public static String reference = "M01LAV";
-    public static String productDescription = "Un miel de toute beauté";
-    public static int quantity = 500;
-
     /**
-     * Generates a {@link User} object that can be a {@link Buyer} or a {@link Seller}
-     * @param type the {@link GenderType} to use
-     * @param id the {@link User#getId()}
+     * Uses a {@link lombok.Builder} to build a {@link User}, either a {@link Buyer} or a {@link Seller}
+     * @param params UserType, id
      * @return a {@link User}
      */
-    public static User getUser(UserType type, long id) {
+    @Override
+    public User getEntityWithBuilder(Object... params) {
+        UserType type = (UserType) params[0];
+        long id = (long) params[1];
         User user;
         if (UserType.BUYER.equals(type)) {
             user = Buyer.builder()
@@ -44,7 +46,7 @@ public class EntityBuilder {
                     .pseudo(pseudo)
                     .firstname(firstname)
                     .lastname(lastname)
-                    .genderType(GenderType.MAN)
+                    .genderType(man)
                     .lastConnection(lastConnected)
                     .description(userDescription)
                     .build();
@@ -57,7 +59,7 @@ public class EntityBuilder {
                     .pseudo(pseudo)
                     .firstname(firstname)
                     .lastname(lastname)
-                    .genderType(GenderType.WOMAN)
+                    .genderType(woman)
                     .lastConnection(lastConnected)
                     .description(userDescription)
                     .companyName(company)
@@ -68,16 +70,24 @@ public class EntityBuilder {
         return user;
     }
 
-
-    public static Product getProduct(Unit unit, long id) {
-        return Product.builder()
-            .id(id)
-            .name(name)
-            .reference(reference)
-            .description(productDescription)
-            .unit(unit)
-            .quantity(quantity)
-            .build();
+    /**
+     * Uses a constructor to build a {@link User}, either a {@link Buyer} or a {@link Seller}
+     * @param params UserType, id
+     * @return a {@link User}
+     */
+    @Override
+    public User getEntityWithConstructor(Object... params) {
+        UserType type = (UserType) params[0];
+        long id = (long) params[1];
+        User user;
+        if (UserType.BUYER.equals(type)) {
+            user = new Buyer(email, password, pseudo, firstname, lastname, man, lastConnected);
+            user.setId(id);
+        } else {
+            user = new Seller(email, password, pseudo, firstname, lastname, woman, lastConnected, company, rcs, siren);
+            user.setId(id);
+        }
+        return user;
     }
 
 }

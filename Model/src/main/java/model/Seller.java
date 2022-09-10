@@ -16,7 +16,7 @@ import java.util.Set;
 
 @Entity
 @Table(name = "SELLER")
-@ToString(onlyExplicitlyIncluded = true)
+@ToString(onlyExplicitlyIncluded = true, callSuper = true)
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @SuperBuilder
 public class Seller extends User {
@@ -45,6 +45,8 @@ public class Seller extends User {
         this.companyName = companyName;
         this.rcs = rcs;
         this.siren = siren;
+        this.products = new LinkedHashSet<>();
+        this.orders = new LinkedHashSet<>();
     }
 
     public void addOrder(Order order) {
@@ -70,7 +72,7 @@ public class Seller extends User {
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
-        if (!(o instanceof Seller)) return false;
+        if (o == null || getClass() != o.getClass()) return false;
         if (!super.equals(o)) return false;
         Seller seller = (Seller) o;
         return companyName.equals(seller.companyName) && Objects.equals(rcs, seller.rcs) && Objects.equals(siren, seller.siren);

@@ -1,6 +1,7 @@
 package model;
 
 import lombok.*;
+import lombok.experimental.SuperBuilder;
 
 import javax.persistence.*;
 import java.math.BigDecimal;
@@ -10,6 +11,8 @@ import java.util.concurrent.atomic.AtomicReference;
 @Entity
 @Table(name = "ORDER")
 @ToString(onlyExplicitlyIncluded = true)
+@SuperBuilder
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Order extends OrderItemContainer {
 
     @Column(name = "ord_is_shared")
@@ -18,22 +21,27 @@ public class Order extends OrderItemContainer {
     /* RELATIONSHIP */
     /** The OrderItem contained in this Order */
     @OneToMany(mappedBy = "order")
-    @Getter @Setter
-    private List<OrderItem> orderItems;
+    @Getter @Setter @Builder.Default
+    private List<OrderItem> orderItems = new ArrayList<>();
     /** The Buyers involved in this Order or just one */
     @ManyToMany @JoinTable(name = "USER_ORDER",
         joinColumns = { @JoinColumn(name = "ord_id") },
             inverseJoinColumns = { @JoinColumn(name = "usr_id") }
     )
-    @Getter @Setter
+    @Getter @Setter @Builder.Default
     private Set<Buyer> buyers = new LinkedHashSet<>();
     /** The Seller for the Products in this Order */
     @ManyToOne @JoinColumn(name = "ord_usr_id_seller")
-    @Getter @Setter
+    @Getter @Setter @ToString.Include
     private Seller seller;
 
-    @Builder
-    public Order() {}
+    public Order(boolean isShared, Seller seller) {
+        super();
+        this.isSharedOrder = isShared;
+        this.seller = seller;
+        this.orderItems = new ArrayList<>();
+        this.buyers = new LinkedHashSet<>();
+    }
 
     public void addBuyer(Buyer buyer) {
         this.buyers.add(buyer);
@@ -84,14 +92,14 @@ public class Order extends OrderItemContainer {
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
-        if (!(o instanceof Order)) return false;
+        if (o == null || getClass() != o.getClass()) return false;
+        if (!super.equals(o)) return false;
         Order order = (Order) o;
-        return isSharedOrder == order.isSharedOrder && orderItems.equals(order.orderItems) && buyers.equals(order.buyers)
-                && seller.equals(order.seller);
+        return isSharedOrder == order.isSharedOrder && seller.equals(order.seller);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(isSharedOrder, orderItems, buyers, seller);
+        return Objects.hash(super.hashCode(), isSharedOrder, seller);
     }
 }

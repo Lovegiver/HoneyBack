@@ -15,23 +15,25 @@ import java.util.Set;
 
 @Entity
 @Table(name = "BUYER")
-@ToString(onlyExplicitlyIncluded = true)
+@ToString(onlyExplicitlyIncluded = true, callSuper = true)
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @SuperBuilder
 public class Buyer extends User {
 
     /* RELATIONSHIP */
     @ManyToMany(mappedBy = "buyers")
-    @Getter @Setter
+    @Getter @Setter @Builder.Default
     private Set<Cart> carts = new LinkedHashSet<>();
     /** User's orders : sent orders for Buyers or received ones for Sellers */
     @ManyToMany(mappedBy = "buyers")
-    @Getter @Setter
+    @Getter @Setter @Builder.Default
     private Set<Order> orders = new LinkedHashSet<>();
 
     public Buyer(@NonNull String email, @NonNull String password, @NonNull String pseudo,
                  @NonNull String firstname, @NonNull String lastname, @NonNull GenderType genderType, LocalDateTime lastConnected) {
         super(UserType.BUYER, email, password, pseudo, firstname, lastname, genderType, lastConnected);
+        this.carts = new LinkedHashSet<>();
+        this.orders = new LinkedHashSet<>();
     }
 
     public void addOrder(Order order) {
@@ -53,14 +55,14 @@ public class Buyer extends User {
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
-        if (!(o instanceof Buyer)) return false;
+        if (o == null || getClass() != o.getClass()) return false;
         if (!super.equals(o)) return false;
         Buyer buyer = (Buyer) o;
-        return carts.equals(buyer.carts) && orders.equals(buyer.orders);
+        return carts.equals(buyer.carts);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(super.hashCode(), carts, orders);
+        return Objects.hash(super.hashCode(), carts);
     }
 }

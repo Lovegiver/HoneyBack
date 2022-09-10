@@ -63,6 +63,8 @@ CREATE TABLE IF NOT EXISTS public.PRODUCT (
     pdt_description varchar(255) ,
     pdt_unit varchar(5) NOT NULL ,
     pdt_quantity integer NOT NULL ,
+    pdt_unit_price_no_Vat real DEFAULT NULL ,
+    pdt_unit_price_with_Vat real DEFAULT NULL ,
     pdt_usr_id_seller bigint NOT NULL ,
     pdt_pic_id bigint DEFAULT NULL
 );

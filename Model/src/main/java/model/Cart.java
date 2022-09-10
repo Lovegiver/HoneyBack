@@ -1,21 +1,18 @@
 package model;
 
-import lombok.Builder;
-import lombok.Getter;
-import lombok.Setter;
-import lombok.ToString;
+import lombok.*;
+import lombok.experimental.SuperBuilder;
 
 import javax.persistence.*;
 import java.math.BigDecimal;
-import java.util.Collection;
-import java.util.List;
-import java.util.Objects;
-import java.util.Set;
+import java.util.*;
 import java.util.concurrent.atomic.AtomicReference;
 
 @Entity
 @Table(name = "CART")
 @ToString(onlyExplicitlyIncluded = true)
+@SuperBuilder
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Cart extends OrderItemContainer {
 
     @Column(name = "crt_is_shared")
@@ -27,15 +24,19 @@ public class Cart extends OrderItemContainer {
         joinColumns = { @JoinColumn(name = "crt_id") },
             inverseJoinColumns = { @JoinColumn(name = "usr_id") }
     )
-    @Getter @Setter
-    private Set<Buyer> buyers;
+    @Getter @Setter @Builder.Default
+    private Set<Buyer> buyers = new LinkedHashSet<>();
     /** The OrderItems contained in this Cart */
     @OneToMany(mappedBy = "cart")
-    @Getter @Setter
-    private List<OrderItem> orderItems;
+    @Getter @Setter @Builder.Default
+    private List<OrderItem> orderItems = new ArrayList<>();
 
-    @Builder
-    protected Cart() {}
+    public Cart(boolean isShared) {
+        super();
+        this.isSharedCart = isShared;
+        this.buyers = new LinkedHashSet<>();
+        this.orderItems = new ArrayList<>();
+    }
 
     /**
      * @return an amount
@@ -86,13 +87,14 @@ public class Cart extends OrderItemContainer {
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
-        if (!(o instanceof Cart)) return false;
+        if (o == null || getClass() != o.getClass()) return false;
+        if (!super.equals(o)) return false;
         Cart cart = (Cart) o;
-        return buyers.equals(cart.buyers) && orderItems.equals(cart.orderItems);
+        return isSharedCart == cart.isSharedCart;
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(buyers, orderItems);
+        return Objects.hash(super.hashCode(), isSharedCart);
     }
 }

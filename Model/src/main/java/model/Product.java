@@ -3,6 +3,8 @@ package model;
 import lombok.*;
 
 import javax.persistence.*;
+import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
@@ -33,6 +35,12 @@ public class Product implements PictureHolder {
     @Column(name = "pdt_quantity")
     @Getter @Setter @ToString.Include
     private int quantity;
+    @Column(name = "pdt_unit_price_no_Vat")
+    @Getter @Setter @ToString.Include
+    private BigDecimal unitPriceNoVAT;
+    @Column(name = "pdt_unit_price_with_Vat")
+    @Getter @Setter @ToString.Include
+    private BigDecimal unitPriceWithVAT;
 
     /* RELATIONSHIP */
     /** The product's seller */
@@ -45,17 +53,20 @@ public class Product implements PictureHolder {
     private Picture associatedPicture;
     /** The order lines where this product may be found */
     @OneToMany(mappedBy = "product")
-    @Getter @Setter
-    private List<OrderItem> orderItems;
+    @Getter @Setter @Builder.Default
+    private List<OrderItem> orderItems = new ArrayList<>();
 
     public Product(@NonNull String name, @NonNull String reference, String description, @NonNull Unit unit,
-                   @NonNull int quantity, @NonNull Seller seller) {
+                   @NonNull int quantity, @NonNull BigDecimal priceNoVat, @NonNull BigDecimal priceWithVat, @NonNull Seller seller) {
         this.name = name;
         this.reference = reference;
         this.description = description;
         this.unit = unit;
         this.quantity = quantity;
+        this.unitPriceNoVAT = priceNoVat;
+        this.unitPriceWithVAT = priceWithVat;
         this.seller = seller;
+        this.orderItems = new ArrayList<>();
     }
 
     @Override
@@ -71,13 +82,13 @@ public class Product implements PictureHolder {
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
-        if (!(o instanceof Product)) return false;
+        if (o == null || getClass() != o.getClass()) return false;
         Product product = (Product) o;
-        return id == product.id && quantity == product.quantity && name.equals(product.name) && reference.equals(product.reference) && unit.equals(product.unit);
+        return id == product.id && quantity == product.quantity && name.equals(product.name) && reference.equals(product.reference) && unit.equals(product.unit) && seller.equals(product.seller);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, name, reference, unit, quantity);
+        return Objects.hash(id, name, reference, unit, quantity, seller);
     }
 }
