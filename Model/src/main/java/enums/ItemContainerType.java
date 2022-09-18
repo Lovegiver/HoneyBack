@@ -1,6 +1,6 @@
 package enums;
 
-public enum OrderItemType {
+public enum ItemContainerType {
     CART,
     ORDER
 }

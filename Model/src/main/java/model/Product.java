@@ -3,6 +3,7 @@ package model;
 import lombok.*;
 
 import javax.persistence.*;
+import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
@@ -14,7 +15,9 @@ import java.util.Objects;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor
 @Builder
-public class Product implements PictureHolder {
+public class Product implements PictureHolder, Serializable {
+
+    private static final long serialVersionUID = 14L;
 
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "pdt_id")

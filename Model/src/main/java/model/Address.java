@@ -4,6 +4,7 @@ import enums.AddressType;
 import lombok.*;
 
 import javax.persistence.*;
+import java.io.Serializable;
 import java.util.Objects;
 
 @Entity
@@ -12,7 +13,9 @@ import java.util.Objects;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor
 @Builder
-public class Address {
+public class Address implements Serializable {
+
+    private static final long serialVersionUID = 10L;
 
     @Id @GeneratedValue @Column(name = "add_id")
     @Getter @Setter @ToString.Include

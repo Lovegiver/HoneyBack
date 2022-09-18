@@ -6,14 +6,15 @@ import lombok.experimental.SuperBuilder;
 import javax.persistence.*;
 import java.math.BigDecimal;
 import java.util.*;
+import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.concurrent.atomic.AtomicReference;
 
 @Entity
 @Table(name = "ORDER")
-@ToString(onlyExplicitlyIncluded = true)
+@ToString(onlyExplicitlyIncluded = true, callSuper = true)
 @SuperBuilder
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class Order extends OrderItemContainer {
+public class Order extends ItemContainer {
 
     @Column(name = "ord_is_shared")
     @Getter @Setter @ToString.Include
@@ -22,7 +23,7 @@ public class Order extends OrderItemContainer {
     /** The OrderItem contained in this Order */
     @OneToMany(mappedBy = "order")
     @Getter @Setter @Builder.Default
-    private List<OrderItem> orderItems = new ArrayList<>();
+    private CopyOnWriteArrayList<OrderItem> orderItems = new CopyOnWriteArrayList<>();
     /** The Buyers involved in this Order or just one */
     @ManyToMany @JoinTable(name = "USER_ORDER",
         joinColumns = { @JoinColumn(name = "ord_id") },
@@ -35,12 +36,12 @@ public class Order extends OrderItemContainer {
     @Getter @Setter @ToString.Include
     private Seller seller;
 
-    public Order(boolean isShared, Seller seller) {
+    public Order(@NonNull List<OrderItem> items, boolean isShared) {
         super();
         this.isSharedOrder = isShared;
-        this.seller = seller;
-        this.orderItems = new ArrayList<>();
+        this.orderItems = new CopyOnWriteArrayList<>();
         this.buyers = new LinkedHashSet<>();
+        this.orderItems.addAll(items);
     }
 
     public void addBuyer(Buyer buyer) {
@@ -51,6 +52,16 @@ public class Order extends OrderItemContainer {
     public void removeBuyer(Buyer buyer) {
         this.buyers.remove(buyer);
         buyer.removeOrder(this);
+    }
+
+    public void addSeller(Seller seller) {
+        seller.addOrder(this);
+        this.seller = seller;
+    }
+
+    public void removeSeller(Seller seller) {
+        seller.removeOrder(this);
+        this.seller = null;
     }
 
     public void addOrderItem(OrderItem item) {

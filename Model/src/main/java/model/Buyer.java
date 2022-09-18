@@ -2,7 +2,13 @@ package model;
 
 import enums.GenderType;
 import enums.UserType;
-import lombok.*;
+import lombok.AccessLevel;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.NonNull;
+import lombok.Setter;
+import lombok.ToString;
 import lombok.experimental.SuperBuilder;
 
 import javax.persistence.Entity;
@@ -36,19 +42,19 @@ public class Buyer extends User {
         this.orders = new LinkedHashSet<>();
     }
 
-    public void addOrder(Order order) {
+    void addOrder(Order order) {
         this.orders.add(order);
     }
 
-    public void removeOrder(Order order) {
+    void removeOrder(Order order) {
         this.orders.remove(order);
     }
 
-    public void addCart(Cart cart) {
+    void addCart(Cart cart) {
         this.carts.add(cart);
     }
 
-    public void removeCart(Cart cart) {
+    void removeCart(Cart cart) {
         this.carts.remove(cart);
     }
 
@@ -63,6 +69,6 @@ public class Buyer extends User {
 
     @Override
     public int hashCode() {
-        return Objects.hash(super.hashCode(), carts);
+        return Objects.hash(super.hashCode());
     }
 }

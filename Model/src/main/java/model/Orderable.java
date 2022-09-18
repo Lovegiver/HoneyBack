@@ -3,7 +3,7 @@ package model;
 import java.math.BigDecimal;
 
 /**
- * Methods to compute the total amount of an {@link OrderItem} or an {@link OrderItemContainer}
+ * Methods to compute the total amount of an {@link OrderItem} or an {@link ItemContainer}
  */
 public interface Orderable {
     /**

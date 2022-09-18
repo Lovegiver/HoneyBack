@@ -1,38 +1,44 @@
 package utils;
 
-import enums.OrderItemType;
+import enums.ItemContainerType;
 import lombok.Builder;
 import model.Cart;
+import model.ItemContainer;
 import model.Order;
-import model.OrderItemContainer;
+import model.OrderItem;
 import model.Seller;
 
-public class CartOrderBuilder implements EntityBuilderService<OrderItemContainer> {
+import java.util.Collection;
+import java.util.concurrent.CopyOnWriteArrayList;
+
+public class CartOrderBuilder implements EntityBuilderService<ItemContainer> {
 
     /**
      * Uses a {@link Builder} to build a {@link Cart} or an {@link Order}
      *
-     * @param params OrderItemType, Id, isShared, Seller
-     * @return a {@link OrderItemContainer}
+     * @param params ItemContainerType, Id, isShared, Seller
+     * @return a {@link ItemContainer}
      */
     @Override
-    public OrderItemContainer getEntityWithBuilder(Object... params) {
-        OrderItemType type = (OrderItemType) params[0];
+    public ItemContainer getEntityWithBuilder(Object... params) {
+        ItemContainerType type = (ItemContainerType) params[0];
         long id = (long) params[1];
         boolean isShared = (boolean) params[2];
-        OrderItemContainer container;
-        if (OrderItemType.CART.equals(type)) {
+        ItemContainer container;
+        if (ItemContainerType.CART.equals(type)) {
             container = Cart.builder()
-                    .id(id)
                     .isSharedCart(isShared)
                     .build();
+            container.setId(id);
         } else {
-            Seller seller = (Seller) params[3];
+            CopyOnWriteArrayList<OrderItem> items = params[3] == null ? new CopyOnWriteArrayList<>() : new CopyOnWriteArrayList<OrderItem>((Collection<OrderItem>) params[3]);
+            Seller seller = (Seller) params[4];
             container = Order.builder()
-                    .id(id)
+                    .orderItems(items)
                     .isSharedOrder(isShared)
-                    .seller(seller)
                     .build();
+            container.setId(id);
+            ((Order) container).setSeller(seller);
         }
         return container;
     }
@@ -40,22 +46,24 @@ public class CartOrderBuilder implements EntityBuilderService<OrderItemContainer
     /**
      * Uses a constructor to build a {@link Cart} or an {@link Order}
      *
-     * @param params OrderItemType, Id, isShared, Seller
-     * @return a {@link OrderItemContainer}
+     * @param params ItemContainerType, Id, isShared, Seller
+     * @return a {@link ItemContainer}
      */
     @Override
-    public OrderItemContainer getEntityWithConstructor(Object... params) {
-        OrderItemType type = (OrderItemType) params[0];
+    public ItemContainer getEntityWithConstructor(Object... params) {
+        ItemContainerType type = (ItemContainerType) params[0];
         long id = (long) params[1];
         boolean isShared = (boolean) params[2];
-        OrderItemContainer container;
-        if (OrderItemType.CART.equals(type)) {
+        ItemContainer container;
+        if (ItemContainerType.CART.equals(type)) {
             container = new Cart(isShared);
             container.setId(id);
         } else {
-            Seller seller = (Seller) params[3];
-            container = new Order(isShared, seller);
+            CopyOnWriteArrayList<OrderItem> items = params[3] == null ? new CopyOnWriteArrayList<>() : new CopyOnWriteArrayList<OrderItem>((Collection<OrderItem>) params[3]);
+            Seller seller = (Seller) params[4];
+            container = new Order(items, isShared);
             container.setId(id);
+            ((Order) container).setSeller(seller);
         }
         return container;
     }

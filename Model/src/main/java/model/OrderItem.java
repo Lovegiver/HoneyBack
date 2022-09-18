@@ -4,6 +4,7 @@ import enums.OrderItemStatus;
 import lombok.*;
 
 import javax.persistence.*;
+import java.io.Serializable;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.Objects;
@@ -12,9 +13,11 @@ import java.util.Objects;
 @Table(name = "ORDERITEM")
 @ToString(onlyExplicitlyIncluded = true)
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-@AllArgsConstructor
+@AllArgsConstructor (access = AccessLevel.PROTECTED)
 @Builder
-public class OrderItem implements Orderable {
+public class OrderItem implements Orderable, Serializable {
+
+    private static final long serialVersionUID = 12L;
 
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "lin_id")
@@ -64,6 +67,17 @@ public class OrderItem implements Orderable {
     @ManyToOne @JoinColumn(name = "lin_crt_id")
     @Getter @Setter @ToString.Include
     private Cart cart;
+
+    public OrderItem(Product product, int quantity, BigDecimal vatRate, BigDecimal discountRate) {
+        this.product = product;
+        this.quantity = quantity;
+        this.applicableVAT = vatRate;
+        this.applicableDiscount = discountRate;
+        this.status = OrderItemStatus.DRAFT;
+        this.creationDate = LocalDateTime.now();
+        this.isActive = true;
+    }
+
     /**
      * @return an amount
      */

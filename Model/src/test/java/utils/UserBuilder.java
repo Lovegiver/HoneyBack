@@ -42,7 +42,7 @@ public class UserBuilder implements EntityBuilderService<User> {
                     .id(id)
                     .userType(type)
                     .email(email)
-                    .password(password)
+                    .password(password.concat(String.valueOf(id)))
                     .pseudo(pseudo)
                     .firstname(firstname)
                     .lastname(lastname)
@@ -55,7 +55,7 @@ public class UserBuilder implements EntityBuilderService<User> {
                     .id(id)
                     .userType(type)
                     .email(email)
-                    .password(password)
+                    .password(password.concat(String.valueOf(id)))
                     .pseudo(pseudo)
                     .firstname(firstname)
                     .lastname(lastname)
@@ -81,10 +81,10 @@ public class UserBuilder implements EntityBuilderService<User> {
         long id = (long) params[1];
         User user;
         if (UserType.BUYER.equals(type)) {
-            user = new Buyer(email, password, pseudo, firstname, lastname, man, lastConnected);
+            user = new Buyer(email, password.concat(String.valueOf(id)), pseudo, firstname, lastname, man, lastConnected);
             user.setId(id);
         } else {
-            user = new Seller(email, password, pseudo, firstname, lastname, woman, lastConnected, company, rcs, siren);
+            user = new Seller(email, password.concat(String.valueOf(id)), pseudo, firstname, lastname, woman, lastConnected, company, rcs, siren);
             user.setId(id);
         }
         return user;

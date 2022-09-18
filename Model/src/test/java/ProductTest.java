@@ -1,4 +1,3 @@
-import enums.GenderType;
 import enums.UserType;
 import enums.WeightUnitType;
 import model.Product;
@@ -36,19 +35,6 @@ public class ProductTest {
         seller.addProduct(product);
 
         assertNotNull(seller);
-        assertEquals(UserBuilder.company, seller.getCompanyName());
-        assertEquals(UserBuilder.rcs, seller.getRcs());
-        assertEquals(UserBuilder.siren, seller.getSiren());
-        assertEquals(sellerId, seller.getId());
-        assertEquals(UserType.SELLER, seller.getUserType());
-        assertEquals(UserBuilder.pseudo, seller.getPseudo());
-        assertEquals(UserBuilder.firstname, seller.getFirstname());
-        assertEquals(UserBuilder.lastname, seller.getLastname());
-        assertEquals(UserBuilder.userDescription, seller.getDescription());
-        assertEquals(UserBuilder.email, seller.getEmail());
-        assertEquals(UserBuilder.password, seller.getPassword());
-        assertEquals(GenderType.WOMAN, seller.getGenderType());
-        assertEquals(UserBuilder.lastConnected, seller.getLastConnection());
         assertEquals(seller, product.getSeller());
 
         assertNotNull(product);

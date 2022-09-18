@@ -49,14 +49,12 @@ public class Seller extends User {
         this.orders = new LinkedHashSet<>();
     }
 
-    public void addOrder(Order order) {
+    void addOrder(Order order) {
         this.orders.add(order);
-        order.setSeller(this);
     }
 
-    public void removeOrder(Order order) {
+    void removeOrder(Order order) {
         this.orders.remove(order);
-        order.setSeller(null);
     }
 
     public void addProduct(Product product) {

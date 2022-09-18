@@ -1,9 +1,26 @@
 package model;
 
-import lombok.*;
+import lombok.AccessLevel;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.NonNull;
+import lombok.Setter;
+import lombok.ToString;
 
-import javax.persistence.*;
-import java.sql.Clob;
+import javax.persistence.Column;
+import javax.persistence.DiscriminatorColumn;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.Inheritance;
+import javax.persistence.InheritanceType;
+import javax.persistence.JoinColumn;
+import javax.persistence.Lob;
+import javax.persistence.OneToOne;
+import javax.persistence.Table;
+import java.io.Serializable;
+import java.sql.Blob;
 import java.util.Objects;
 
 @Entity
@@ -12,7 +29,9 @@ import java.util.Objects;
 @DiscriminatorColumn(name = "pic_type")
 @ToString(onlyExplicitlyIncluded = true)
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class Picture {
+public class Picture implements Serializable {
+
+    private static final long serialVersionUID = 13L;
 
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "pic_id")
@@ -21,14 +40,14 @@ public class Picture {
     @Lob
     @Column(name = "pic_picture")
     @Getter @Setter
-    private Clob picture;
+    private Blob picture;
     /* RELATIONSHIP */
     @OneToOne @JoinColumn(name = "pic_usr_id_owner")
     @Getter @Setter @ToString.Include
     private User owner;
 
 
-    public Picture(@NonNull Clob picture, @NonNull User user) {
+    public Picture(@NonNull Blob picture, @NonNull User user) {
         this.picture = picture;
         this.owner = user;
     }

@@ -6,19 +6,24 @@ import lombok.experimental.SuperBuilder;
 import javax.persistence.*;
 import java.math.BigDecimal;
 import java.util.*;
+import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.concurrent.atomic.AtomicReference;
 
 @Entity
 @Table(name = "CART")
-@ToString(onlyExplicitlyIncluded = true)
+@ToString(onlyExplicitlyIncluded = true, callSuper = true)
 @SuperBuilder
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class Cart extends OrderItemContainer {
+public class Cart extends ItemContainer {
 
     @Column(name = "crt_is_shared")
     @Getter @Setter @ToString.Include
     private boolean isSharedCart;
     /* RELATIONSHIP */
+    /** The OrderItems contained in this Cart */
+    @OneToMany(mappedBy = "cart")
+    @Getter @Setter @Builder.Default
+    private CopyOnWriteArrayList<OrderItem> orderItems = new CopyOnWriteArrayList<>();
     /** The Buyer, owner of this Cart */
     @ManyToMany @JoinTable(name = "USER_CART",
         joinColumns = { @JoinColumn(name = "crt_id") },
@@ -26,16 +31,12 @@ public class Cart extends OrderItemContainer {
     )
     @Getter @Setter @Builder.Default
     private Set<Buyer> buyers = new LinkedHashSet<>();
-    /** The OrderItems contained in this Cart */
-    @OneToMany(mappedBy = "cart")
-    @Getter @Setter @Builder.Default
-    private List<OrderItem> orderItems = new ArrayList<>();
 
-    public Cart(boolean isShared) {
+     public Cart(boolean isShared) {
         super();
         this.isSharedCart = isShared;
         this.buyers = new LinkedHashSet<>();
-        this.orderItems = new ArrayList<>();
+         this.orderItems = new CopyOnWriteArrayList<>();
     }
 
     /**

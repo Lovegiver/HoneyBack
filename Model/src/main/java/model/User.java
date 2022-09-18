@@ -2,10 +2,31 @@ package model;
 
 import enums.GenderType;
 import enums.UserType;
-import lombok.*;
+import lombok.AccessLevel;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.NonNull;
+import lombok.Setter;
+import lombok.ToString;
 import lombok.experimental.SuperBuilder;
 
-import javax.persistence.*;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.Inheritance;
+import javax.persistence.InheritanceType;
+import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
+import javax.persistence.Table;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
+import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.util.LinkedHashSet;
 import java.util.Objects;
@@ -19,7 +40,9 @@ import java.util.Set;
 @AllArgsConstructor
 @SuperBuilder
 public
-class User implements PictureHolder {
+class User implements PictureHolder, Serializable {
+
+    private static final long serialVersionUID = 15L;
 
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "usr_id")
@@ -97,11 +120,11 @@ class User implements PictureHolder {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         User user = (User) o;
-        return id == user.id && userType == user.userType && Objects.equals(pseudo, user.pseudo) && email.equals(user.email) && Objects.equals(lastConnection, user.lastConnection) && genderType == user.genderType;
+        return id == user.id && userType == user.userType && email.equals(user.email) && password.equals(user.password) && Objects.equals(lastConnection, user.lastConnection) && genderType == user.genderType;
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, userType, pseudo, email, lastConnection, genderType);
+        return Objects.hash(id, userType, email, password, lastConnection, genderType);
     }
 }

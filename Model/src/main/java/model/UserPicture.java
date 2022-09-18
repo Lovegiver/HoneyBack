@@ -1,14 +1,22 @@
 package model;
 
-import lombok.*;
+import lombok.AccessLevel;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.NonNull;
+import lombok.Setter;
+import lombok.ToString;
 
-import javax.persistence.*;
-import java.sql.Clob;
+import javax.persistence.DiscriminatorValue;
+import javax.persistence.Entity;
+import javax.persistence.JoinColumn;
+import javax.persistence.OneToOne;
+import java.sql.Blob;
 import java.util.Objects;
 
 @Entity
 @DiscriminatorValue("USER")
-@ToString(onlyExplicitlyIncluded = true)
+@ToString(onlyExplicitlyIncluded = true, callSuper = true)
 @NoArgsConstructor(access = AccessLevel.PUBLIC)
 public class UserPicture extends Picture {
 
@@ -17,7 +25,7 @@ public class UserPicture extends Picture {
     @Getter @Setter @ToString.Include
     private User user;
 
-    public UserPicture(@NonNull Clob picture, @NonNull User user) {
+    public UserPicture(@NonNull Blob picture, @NonNull User user) {
         super(picture, user);
     }
 

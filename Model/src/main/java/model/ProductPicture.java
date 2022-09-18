@@ -1,20 +1,23 @@
 package model;
 
-import lombok.*;
+import lombok.AccessLevel;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.NonNull;
+import lombok.Setter;
+import lombok.ToString;
 
 import javax.persistence.DiscriminatorValue;
 import javax.persistence.Entity;
 import javax.persistence.OneToMany;
-import javax.persistence.Table;
-import java.sql.Clob;
+import java.sql.Blob;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
-import java.util.Set;
 
 @Entity
 @DiscriminatorValue("PRODUCT")
-@ToString(onlyExplicitlyIncluded = true)
+@ToString(onlyExplicitlyIncluded = true, callSuper = true)
 @NoArgsConstructor(access = AccessLevel.PUBLIC)
 public class ProductPicture extends Picture {
 
@@ -23,7 +26,7 @@ public class ProductPicture extends Picture {
     @Getter @Setter @ToString.Include
     private List<Product> products = new ArrayList<>();
 
-    public ProductPicture(@NonNull Clob picture, @NonNull User user) {
+    public ProductPicture(@NonNull Blob picture, @NonNull User user) {
         super(picture, user);
     }
 
